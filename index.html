@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cipher Tool</title>
+    <script>
+        // JavaScript function to handle form submission and display output
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const text = document.getElementById("text").value;
+            const mode = document.getElementById("mode").value;
+
+            const response = await fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({ text: text, mode: mode }),
+            });
+
+            const result = await response.text();
+            document.getElementById("output").value = result;
+        }
+
+        // JavaScript function to update the button text and clear input/output fields
+        function updateButtonTextAndClearFields() {
+            const mode = document.getElementById("mode").value;
+            const submitButton = document.getElementById("submitButton");
+
+            // Change button text based on selected mode
+            if (mode === "caesar-decipher" || mode === "vigenere-decipher" || mode === "binary-decipher") {
+                submitButton.value = "Decrypt";
+            } else {
+                submitButton.value = "Encrypt";
+            }
+
+            // Clear input and output boxes for a fresh start
+            document.getElementById("text").value = "";
+            document.getElementById("output").value = "";
+        }
+    </script>
+</head>
+<body>
+    <h1>Cipher Tool</h1>
+    <form onsubmit="handleSubmit(event)">
+        <label for="text">Input text:</label><br>
+        <textarea id="text" name="text" rows="4" cols="50" required></textarea><br><br>
+
+        <label for="mode">Select a cipher:</label><br>
+        <select id="mode" name="mode" onchange="updateButtonTextAndClearFields()">
+            <option value="caesar">Caesar Cipher</option>
+            <option value="caesar-decipher">Caesar Decipher</option>
+            <option value="vigenere">Vigenere Cipher</option>
+            <option value="vigenere-decipher">Vigenere Decipher</option>
+            <option value="binary">Text to Binary</option>
+            <option value="binary-decipher">Binary to Text</option>
+        </select><br><br>
+
+        <input type="submit" id="submitButton" value="Encrypt">
+    </form>
+
+    <h2>Output:</h2>
+    <textarea id="output" rows="4" cols="50" readonly></textarea>
+</body>
+</html>
